@@ -4,6 +4,8 @@ import type { Session } from '@/api/contracts/session'
 import { fetchSession } from '@/api/session'
 import { sessionToken } from '@/api/session-token'
 
+const SESSION_HEARTBEAT_MS = 30_000
+
 export const sessionKeys = {
   session: ['session'] as const,
 }
@@ -28,6 +30,9 @@ export function sessionQueryOptions() {
         throw error
       }
     },
-    staleTime: 5 * 60_000,
+    staleTime: 15_000,
+    refetchOnWindowFocus: 'always',
+    refetchInterval: (query) => (query.state.data ? SESSION_HEARTBEAT_MS : false),
+    refetchIntervalInBackground: false,
   })
 }

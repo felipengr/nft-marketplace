@@ -15,7 +15,7 @@ export type MockDatabase = {
   sessions: SessionRecord[]
 }
 
-const SCHEMA_VERSION = 1
+const SCHEMA_VERSION = 2
 
 const STORAGE_KEY = 'kurio.mock-db'
 

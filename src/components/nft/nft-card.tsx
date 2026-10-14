@@ -3,7 +3,7 @@ import { Heart } from 'lucide-react'
 import type { NftSummary } from '@/api/contracts/nft'
 import { SearchIcon, ShopIcon } from '@/components/icons/brand-icons'
 import { Skeleton } from '@/components/ui/skeleton'
-import { requestAddToCart, requestToggleFavorite } from '@/features/nft-detail/purchase-actions'
+import { useNftActions } from '@/features/nft-detail/use-nft-actions'
 import { cn } from '@/lib/utils'
 import { NftImage } from './nft-image'
 import { NftPrice } from './nft-price'
@@ -26,6 +26,7 @@ const ACTION_CLASS =
 
 export function NftCard({ nft, priority = false, sizes = DEFAULT_SIZES, className }: NftCardProps) {
   const soldOut = nft.available === 0
+  const { toggleFavorite, addToCart } = useNftActions()
 
   return (
     <article className={cn('group relative flex flex-col', className)}>
@@ -45,7 +46,7 @@ export function NftCard({ nft, priority = false, sizes = DEFAULT_SIZES, classNam
         ) : null}
         <button
           type="button"
-          onClick={() => requestToggleFavorite(nft.id)}
+          onClick={() => toggleFavorite(nft.id)}
           aria-label={`Favoritar ${nft.name}`}
           className="absolute top-4 right-4 z-10 flex size-8 items-center justify-center rounded-full bg-background/85 text-primary md:hidden"
         >
@@ -54,14 +55,14 @@ export function NftCard({ nft, priority = false, sizes = DEFAULT_SIZES, classNam
         <div className="absolute inset-x-0 bottom-8 z-10 hidden justify-center gap-3 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 md:flex">
           <button
             type="button"
-            onClick={() => requestAddToCart({ nftId: nft.id, quantity: 1 })}
+            onClick={() => addToCart({ nftId: nft.id, quantity: 1 })}
             disabled={soldOut}
             aria-label={`Adicionar ${nft.name} ao carrinho`}
             className={cn(ACTION_CLASS, 'disabled:cursor-not-allowed disabled:opacity-50')}
           >
             <ShopIcon className="size-5" />
           </button>
-          <button type="button" onClick={() => requestToggleFavorite(nft.id)} aria-label={`Favoritar ${nft.name}`} className={ACTION_CLASS}>
+          <button type="button" onClick={() => toggleFavorite(nft.id)} aria-label={`Favoritar ${nft.name}`} className={ACTION_CLASS}>
             <Heart className="size-5" aria-hidden />
           </button>
           <Link to="/nfts/$nftId" params={{ nftId: nft.id }} aria-label={`Ver detalhes de ${nft.name}`} className={ACTION_CLASS}>

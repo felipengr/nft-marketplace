@@ -34,5 +34,27 @@ export function createUserFixtures(): UserRecord[] {
       passwordHash: 'c39f8c8764ffc103d4e24370757de5bc16848164c03e0027919bc54e6dd01f12',
       createdAt: '2026-09-11T09:05:00.000Z',
     },
+    {
+      id: 'usr_felipe',
+      username: 'felipe.nogueira',
+      displayName: 'Felipe Nogueira',
+      email: 'felipe@kurio.dev',
+      avatarUrl: null,
+      ensName: 'felipenogueira',
+      passwordSalt: 'felipe-5d8a31',
+      passwordHash: 'fd1672c4be2812703b682eeb03f2d1629a3c972452e26ac02f05b47b666aaeec',
+      createdAt: '2026-10-01T12:00:00.000Z',
+    },
+    {
+      id: 'usr_alison',
+      username: 'alison',
+      displayName: 'Alison',
+      email: 'alison@kurio.dev',
+      avatarUrl: null,
+      ensName: null,
+      passwordSalt: 'alison-9c4e72',
+      passwordHash: 'c13dc9cbb366033d1f8bf5b6758f819a51bedb860fe3c58e090b1c04422c9a1f',
+      createdAt: '2026-10-01T12:05:00.000Z',
+    },
   ]
 }

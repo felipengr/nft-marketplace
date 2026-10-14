@@ -10,7 +10,7 @@ import { formatEth, multiplyEth } from '@/lib/money'
 import { EditionPicker } from './edition-picker'
 import { NftDetailTabs, type DetailTab } from './nft-detail-tabs'
 import { MobileNftGallery, NftGallery } from './nft-gallery'
-import { requestAddToCart, requestPurchase, requestToggleFavorite } from './purchase-actions'
+import { useNftActions } from './use-nft-actions'
 import { formatRating } from './rating'
 import { RatingStars } from './rating-stars'
 import { QuantityStepper } from './quantity-stepper'
@@ -58,6 +58,7 @@ export function NftDetailView({ nft, editionId, onEditionChange }: NftDetailView
   const [tab, setTab] = useState<DetailTab>('details')
   const tabsRef = useRef<HTMLElement>(null)
   const goBack = useBack()
+  const { toggleFavorite, addToCart, purchase } = useNftActions()
   const soldOut = edition.available === 0
   const intent = { nftId: nft.id, editionId: edition.id, quantity }
   const shareUrl = typeof window === 'undefined' ? '' : `${window.location.origin}/nfts/${nft.id}`
@@ -86,7 +87,7 @@ export function NftDetailView({ nft, editionId, onEditionChange }: NftDetailView
             </button>
             <button
               type="button"
-              onClick={() => requestToggleFavorite(nft.id)}
+              onClick={() => toggleFavorite(nft.id)}
               aria-label="Favoritar"
               className="flex size-10 items-center justify-center rounded-full border border-primary/40 bg-background/70 text-subtle backdrop-blur"
             >
@@ -152,12 +153,12 @@ export function NftDetailView({ nft, editionId, onEditionChange }: NftDetailView
 
             <div className="hidden flex-wrap items-center justify-between gap-4 md:flex">
               <QuantityStepper value={quantity} max={maxQuantity} onChange={setQuantity} />
-              <div>
-                <Button size="lg" className="h-10 w-[8.125rem] font-bold" disabled={soldOut} onClick={() => requestPurchase(intent)}>
+              <div className="flex items-center gap-2">
+                <Button size="lg" className="h-10 w-32.5 font-bold" disabled={soldOut} onClick={() => purchase(intent)}>
                   COMPRAR
                 </Button>
-                <Button size="lg" variant="outline" className="h-10 font-normal" onClick={() => requestToggleFavorite(nft.id)}>
-                  <Heart aria-hidden />
+                <Button size="lg" variant="outline" className="h-10 font-normal" onClick={() => toggleFavorite(nft.id)}>
+                  <Heart aria-hidden className="text-primary" />
                   Favoritar
                 </Button>
               </div>
@@ -201,7 +202,7 @@ export function NftDetailView({ nft, editionId, onEditionChange }: NftDetailView
           <Button
             className="h-14 flex-1 rounded-full bg-linear-to-r from-primary to-primary/70 text-base font-bold"
             disabled={soldOut}
-            onClick={() => requestPurchase(intent)}
+            onClick={() => purchase(intent)}
           >
             {soldOut ? 'Edição esgotada' : 'Comprar NFT'}
           </Button>
@@ -209,7 +210,7 @@ export function NftDetailView({ nft, editionId, onEditionChange }: NftDetailView
             type="button"
             aria-label="Adicionar ao carrinho"
             disabled={soldOut}
-            onClick={() => requestAddToCart(intent)}
+            onClick={() => addToCart(intent)}
             className="flex size-14 items-center justify-center rounded-full border border-secondary bg-secondary/40 text-primary disabled:opacity-40"
           >
             <ShopIcon className="size-5" />
