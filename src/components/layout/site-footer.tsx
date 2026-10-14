@@ -5,6 +5,7 @@ import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon, YoutubeIcon } f
 import type { Category } from '@/api/contracts/nft'
 import { CATALOG_SECTION_ID } from '@/features/catalog/catalog-search'
 import { notifyComingSoon } from '@/lib/coming-soon'
+import { cn } from '@/lib/utils'
 
 const FEATURES = [
   {
@@ -114,9 +115,9 @@ function NewsletterForm() {
   )
 }
 
-export function SiteFooter() {
+export function SiteFooter({ className }: { className?: string }) {
   return (
-    <footer className="container-page pt-16 pb-24 md:pb-6">
+    <footer className={cn('container-page pt-16 pb-28 md:pb-6', className)}>
       <div className="bg-surface">
         <div className="grid gap-8 px-6 py-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0 lg:px-10">
           {FEATURES.map((feature) => (

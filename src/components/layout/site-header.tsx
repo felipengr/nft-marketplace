@@ -1,10 +1,10 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { LogIn } from 'lucide-react'
 import { SearchIcon, ShopIcon } from '@/components/icons/brand-icons'
 import { Button } from '@/components/ui/button'
 import { CATALOG_SECTION_ID } from '@/features/catalog/catalog-search'
 import { notifyComingSoon } from '@/lib/coming-soon'
 import { cn } from '@/lib/utils'
+import { AccountMenu } from './account-menu'
 import { SearchDialog } from './search-dialog'
 
 const NAV_ITEM_CLASS =
@@ -82,10 +82,7 @@ export function SiteHeader() {
             >
               <ShopIcon className="size-[1.375rem]" />
             </Button>
-            <Button onClick={() => notifyComingSoon('O login')}>
-              <LogIn aria-hidden />
-              Entrar
-            </Button>
+            <AccountMenu />
           </div>
         </div>
       </div>

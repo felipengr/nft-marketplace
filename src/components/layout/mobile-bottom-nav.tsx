@@ -3,6 +3,7 @@ import { ScanLine } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { HeartFilledIcon, HomeFilledIcon, ShopIcon, UserIcon } from '@/components/icons/brand-icons'
 import { notifyComingSoon } from '@/lib/coming-soon'
+import { useSession } from '@/features/auth/use-session'
 import { SearchDialog } from './search-dialog'
 
 const ITEM_CLASS =
@@ -20,8 +21,8 @@ function NavButton({ label, onClick, children }: { label: string; onClick: () =>
 
 export function MobileBottomNav() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
-
-  if (pathname.startsWith('/nfts/')) return null
+  const href = useRouterState({ select: (state) => state.location.href })
+  const { user } = useSession()
 
   return (
     <nav aria-label="Navegação inferior" className="fixed inset-x-0 bottom-0 z-40 md:hidden">
@@ -47,9 +48,15 @@ export function MobileBottomNav() {
             </NavButton>
           </li>
           <li>
-            <NavButton label="Minha conta" onClick={() => notifyComingSoon('A área da conta')}>
+            <Link
+              to={user ? '/account' : '/login'}
+              search={user ? undefined : { redirect: href }}
+              aria-label={user ? 'Minha conta' : 'Entrar'}
+              aria-current={pathname === '/account' ? 'page' : undefined}
+              className={ITEM_CLASS}
+            >
               <UserIcon className="size-5.5" />
-            </NavButton>
+            </Link>
           </li>
         </ul>
       </div>

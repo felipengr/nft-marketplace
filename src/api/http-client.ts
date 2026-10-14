@@ -1,6 +1,7 @@
 import axios, { type AxiosRequestConfig } from 'axios'
 import type { z } from 'zod'
 import { ApiError, createApiError, toApiError } from './api-error'
+import { authEvents } from './auth-events'
 import { sessionToken } from './session-token'
 
 export const httpClient = axios.create({
@@ -17,7 +18,12 @@ httpClient.interceptors.request.use((config) => {
 
 httpClient.interceptors.response.use(
   (response) => response,
-  (error: unknown) => Promise.reject(toApiError(error)),
+  (error: unknown) => {
+    const apiError = toApiError(error)
+    const sentToken = axios.isAxiosError(error) && Boolean(error.config?.headers?.Authorization)
+    if (apiError.isAuthError && sentToken) authEvents.emitAuthFailure(apiError)
+    return Promise.reject(apiError)
+  },
 )
 
 export async function request<TSchema extends z.ZodType>(
