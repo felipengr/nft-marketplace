@@ -1,16 +1,17 @@
 import { HttpResponse, http } from 'msw'
 import { parseCatalogParams } from '@/api/contracts/catalog-query'
-import type { CatalogResponse, FeaturedResponse, RelatedResponse } from '@/api/contracts/nft'
+import type { CatalogResponse, FeaturedResponse, RelatedResponse, ReviewsResponse } from '@/api/contracts/nft'
 import { db } from '../db/database'
 import { FEATURED_FIXTURE } from '../fixtures/featured'
 import type { NftRecord } from '../fixtures/nfts'
+import { buildReviews } from '../fixtures/reviews'
 import { notFound, validationError } from '../network/responses'
 import { mockRuntime } from '../network/runtime'
 import { withNetwork } from '../network/simulate'
 import { toNftDetail, toNftSummary } from '../serializers'
 import { queryCatalog } from './catalog-query'
 
-const RELATED_LIMIT = 5
+const RELATED_LIMIT = 10
 
 function catalogRecords(): NftRecord[] {
   return mockRuntime.scenario().emptyCatalog ? [] : db.read().nfts
@@ -74,6 +75,16 @@ export const catalogHandlers = [
       const body: RelatedResponse = {
         items: [...sameCollection, ...rest].slice(0, RELATED_LIMIT).map(toNftSummary),
       }
+      return HttpResponse.json(body)
+    }),
+  ),
+
+  http.get<{ nftId: string }>(
+    '/api/nfts/:nftId/reviews',
+    withNetwork(({ params }) => {
+      const record = findRecord(params.nftId)
+      if (!record) return nftNotFound()
+      const body: ReviewsResponse = { ...record.rating, items: buildReviews(record) }
       return HttpResponse.json(body)
     }),
   ),

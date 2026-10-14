@@ -84,6 +84,7 @@ export const nftDetailSchema = nftSummarySchema.extend({
   attributes: z.array(z.string()),
   gallery: z.array(imageSchema).min(1),
   editions: z.array(editionSchema).min(1),
+  defaultEditionId: z.string(),
   rating: z.object({ average: z.string(), count: z.number().int().min(0) }),
   creator: z.object({ name: z.string(), royaltyPercent: z.string() }),
   networkDetails: z.string(),
@@ -118,6 +119,24 @@ export const featuredResponseSchema = z.object({
 })
 
 export type FeaturedResponse = z.infer<typeof featuredResponseSchema>
+
+export const reviewSchema = z.object({
+  id: z.string(),
+  author: z.string(),
+  rating: z.number().int().min(1).max(5),
+  comment: z.string(),
+  createdAt: isoDateTimeSchema,
+})
+
+export type Review = z.infer<typeof reviewSchema>
+
+export const reviewsResponseSchema = z.object({
+  average: z.string(),
+  count: z.number().int().min(0),
+  items: z.array(reviewSchema),
+})
+
+export type ReviewsResponse = z.infer<typeof reviewsResponseSchema>
 
 export const relatedResponseSchema = z.object({
   items: z.array(nftSummarySchema),

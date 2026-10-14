@@ -5,8 +5,17 @@ import {
   featuredResponseSchema,
   nftDetailSchema,
   relatedResponseSchema,
+  reviewsResponseSchema,
   type CatalogParamsInput,
 } from './contracts/nft'
+
+export function fetchNftReviews(nftId: string, signal?: AbortSignal) {
+  return request(reviewsResponseSchema, {
+    method: 'GET',
+    url: `/nfts/${encodeURIComponent(nftId)}/reviews`,
+    signal,
+  })
+}
 
 export function fetchCatalog(params: CatalogParamsInput, signal?: AbortSignal) {
   return request(catalogResponseSchema, {

@@ -1,6 +1,6 @@
 import { keepPreviousData, queryOptions } from '@tanstack/react-query'
 import { catalogParamsSchema, type CatalogParamsInput } from '@/api/contracts/nft'
-import { fetchCatalog, fetchFeatured, fetchNft, fetchRelatedNfts } from '@/api/nfts'
+import { fetchCatalog, fetchFeatured, fetchNft, fetchNftReviews, fetchRelatedNfts } from '@/api/nfts'
 
 export const nftKeys = {
   all: ['nfts'] as const,
@@ -10,6 +10,7 @@ export const nftKeys = {
   details: () => [...nftKeys.all, 'detail'] as const,
   detail: (nftId: string) => [...nftKeys.details(), nftId] as const,
   related: (nftId: string) => [...nftKeys.all, 'related', nftId] as const,
+  reviews: (nftId: string) => [...nftKeys.all, 'reviews', nftId] as const,
 }
 
 export function catalogQueryOptions(params: CatalogParamsInput) {
@@ -39,6 +40,14 @@ export function relatedNftsQueryOptions(nftId: string) {
   return queryOptions({
     queryKey: nftKeys.related(nftId),
     queryFn: ({ signal }) => fetchRelatedNfts(nftId, signal),
+    staleTime: 5 * 60_000,
+  })
+}
+
+export function nftReviewsQueryOptions(nftId: string) {
+  return queryOptions({
+    queryKey: nftKeys.reviews(nftId),
+    queryFn: ({ signal }) => fetchNftReviews(nftId, signal),
     staleTime: 5 * 60_000,
   })
 }

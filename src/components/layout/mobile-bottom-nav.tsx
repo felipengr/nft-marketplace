@@ -20,6 +20,8 @@ function NavButton({ label, onClick, children }: { label: string; onClick: () =>
 export function MobileBottomNav() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
 
+  if (pathname.startsWith('/nfts/')) return null
+
   return (
     <nav
       aria-label="Navegação inferior"
