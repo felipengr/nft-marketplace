@@ -49,6 +49,22 @@ export function normalizeEth(value: EthAmount): EthAmount {
   return toEth(value).toFixed()
 }
 
+export function ethToCents(value: EthAmount, rounding: 'up' | 'down' = 'down'): number {
+  const mode = rounding === 'up' ? Decimal.ROUND_UP : Decimal.ROUND_DOWN
+  return toEth(value).times(100).toDecimalPlaces(0, mode).toNumber()
+}
+
+export function centsToEth(cents: number): EthAmount {
+  if (!Number.isInteger(cents)) {
+    throw new RangeError('Cents must be an integer')
+  }
+  return toEth(cents).dividedBy(100).toFixed(2)
+}
+
+export function formatEthLocale(value: EthAmount, fractionDigits = 2): string {
+  return toEth(value).toFixed(fractionDigits).replace('.', ',')
+}
+
 export function formatEthValue(value: EthAmount, minimumFractionDigits = 2): string {
   const decimal = toEth(value)
   const places = Math.max(decimal.decimalPlaces(), minimumFractionDigits)

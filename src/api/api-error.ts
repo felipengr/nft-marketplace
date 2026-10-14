@@ -76,3 +76,7 @@ export function toApiError(error: unknown): ApiError {
   }
   return createApiError('INVALID_RESPONSE')
 }
+
+export function getErrorMessage(error: unknown): string {
+  return isApiError(error) ? error.message : FALLBACK_MESSAGES.INTERNAL_ERROR
+}
