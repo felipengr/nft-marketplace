@@ -2,7 +2,7 @@ import { notifyComingSoon } from '@/lib/coming-soon'
 
 export type PurchaseIntent = {
   nftId: string
-  editionId: string
+  editionId?: string
   quantity: number
 }
 

@@ -61,6 +61,22 @@ export function MailIcon(props: IconProps) {
   )
 }
 
+export function HomeFilledIcon(props: IconProps) {
+  return (
+    <svg width="24" height="24" {...base(props, '0 0 24 24')}>
+      <path d="M10.6 3.4a2 2 0 0 1 2.8 0l7 6.5c.4.4.6.9.6 1.5V19a2 2 0 0 1-2 2h-3.5a1 1 0 0 1-1-1v-4.5a1.5 1.5 0 0 0-3 0V20a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2v-7.6c0-.6.2-1.1.6-1.5z" />
+    </svg>
+  )
+}
+
+export function HeartFilledIcon(props: IconProps) {
+  return (
+    <svg width="24" height="24" {...base(props, '0 0 24 24')}>
+      <path d="M12 20.5s-7.5-4.6-9.4-9.1C1.3 8.3 3.2 4.5 6.9 4.5c2 0 3.6 1.1 5.1 2.9 1.5-1.8 3.1-2.9 5.1-2.9 3.7 0 5.6 3.8 4.3 6.9-1.9 4.5-9.4 9.1-9.4 9.1z" />
+    </svg>
+  )
+}
+
 export function CloseIcon(props: IconProps) {
   return (
     <svg width="18" height="18" {...base(props, '0 0 18 18')}>

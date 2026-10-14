@@ -33,10 +33,11 @@ export function CatalogSection({ search }: { search: CatalogSearch }) {
   )
   const { clearFilters } = useCatalogNavigation()
   const updating = isFetching && !isPending
+  const filtered = Boolean(search.q || search.categories.length || search.networks.length || search.minPrice || search.maxPrice)
   const outOfRange = data && data.items.length === 0 && data.pagination.totalItems > 0
 
   return (
-    <section id={CATALOG_SECTION_ID} aria-labelledby="catalog-title" className="container-page scroll-mt-6 pt-10 md:pt-24">
+    <section id={CATALOG_SECTION_ID} aria-labelledby="catalog-title" className="container-page scroll-mt-6 pt-5 md:pt-24">
       <h2 id="catalog-title" className="sr-only">
         Catálogo de NFTs
       </h2>
@@ -49,15 +50,15 @@ export function CatalogSection({ search }: { search: CatalogSearch }) {
         </aside>
 
         <div className="min-w-0">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-4 md:mb-6">
             <CatalogTabs active={search.tab} />
             <div className="hidden md:block">
               <CatalogSortSelect value={search.sort} />
             </div>
           </div>
 
-          <div className="mb-4 flex min-h-6 items-center justify-between gap-3 text-sm text-subtle">
-            <p aria-live="polite" aria-atomic="true">
+          <div className={cn('flex items-center justify-between gap-3 text-sm text-subtle', (filtered || updating) && 'mb-4 min-h-6')}>
+            <p aria-live="polite" aria-atomic="true" className={filtered ? undefined : 'sr-only'}>
               {data && !updating ? catalogSummary(search, data.pagination.totalItems) : null}
             </p>
             {updating ? (

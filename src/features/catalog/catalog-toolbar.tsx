@@ -31,7 +31,7 @@ export function CatalogTabs({ active }: { active: CatalogTab }) {
                 resetScroll={false}
                 aria-current={selected ? 'true' : undefined}
                 className={cn(
-                  'inline-block border-b-2 pb-1 text-sm font-semibold transition-colors hover:text-primary sm:text-[0.95rem] sm:tracking-wide',
+                  'inline-block border-b-2 pb-1 text-sm transition-colors hover:text-primary sm:text-[0.95rem] sm:font-semibold sm:tracking-wide',
                   selected ? 'border-primary text-primary' : 'border-transparent text-foreground',
                 )}
               >
