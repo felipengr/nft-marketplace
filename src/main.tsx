@@ -1,19 +1,21 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { routeTree } from './routeTree.gen'
+import { App } from './app'
 import './index.css'
 
-const router = createRouter({ routeTree })
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router
-  }
+async function enableMocks(): Promise<void> {
+  if (import.meta.env.VITE_ENABLE_MOCKS !== 'true') return
+  const { startMocks } = await import('./mocks/browser')
+  await startMocks()
 }
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
-)
+async function bootstrap(): Promise<void> {
+  await enableMocks()
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  )
+}
+
+void bootstrap()
