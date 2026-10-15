@@ -7,7 +7,7 @@ import type { Cart, Quote } from '@/api/contracts/cart'
 import type { User } from '@/api/contracts/session'
 import { WALLET_NETWORK_LABELS, WALLET_PROVIDER_LABELS, type Wallet, type WalletNetwork, type WalletProvider } from '@/api/contracts/wallet'
 import { ErrorState } from '@/components/feedback/query-states'
-import { SelectField, TextAreaField, TextField } from '@/components/form/form-field'
+import { EnsField, SelectField, TextAreaField, TextField } from '@/components/form/form-field'
 import { NftImage } from '@/components/nft/nft-image'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -236,23 +236,7 @@ function CheckoutContent({ user, cart, quote, quoteStale, wallets }: CheckoutCon
                 {...register('referralCode')}
               />
               <TextField label="E-mail" type="email" hideLabel={false} requiredMark autoComplete="email" error={errors.email?.message} {...register('email')} />
-              <div>
-                <div className="flex items-end gap-2">
-                  <TextField
-                    label="Nome ENS"
-                    hideLabel={false}
-                    requiredMark
-                    autoComplete="off"
-                    className="flex-1"
-                    aria-describedby="ens-suffix"
-                    error={errors.ensName?.message}
-                    {...register('ensName')}
-                  />
-                  <span id="ens-suffix" className={cn('flex h-10 items-center rounded-sm border border-secondary px-3 text-sm', errors.ensName && 'mb-6')}>
-                    .eth
-                  </span>
-                </div>
-              </div>
+              <EnsField label="Nome ENS" requiredMark error={errors.ensName?.message} {...register('ensName')} />
             </div>
 
             <label className="flex w-fit cursor-pointer items-center gap-2 text-[0.95rem]">

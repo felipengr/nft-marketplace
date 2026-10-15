@@ -5,6 +5,8 @@ import { authEvents } from './auth-events'
 import { guestCartId } from './cart-identity'
 import { sessionToken } from './session-token'
 
+const AUTH_ENDPOINTS = ['/auth/login', '/auth/register']
+
 export const httpClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ?? '/api',
   timeout: Number(import.meta.env.VITE_API_TIMEOUT_MS ?? 10_000),
@@ -22,8 +24,10 @@ httpClient.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
     const apiError = toApiError(error)
-    const sentToken = axios.isAxiosError(error) && Boolean(error.config?.headers?.Authorization)
-    if (apiError.isAuthError && sentToken) authEvents.emitAuthFailure(apiError)
+    const config = axios.isAxiosError(error) ? error.config : undefined
+    const sentToken = Boolean(config?.headers?.Authorization)
+    const credentialCheck = AUTH_ENDPOINTS.some((endpoint) => config?.url?.startsWith(endpoint))
+    if (apiError.isAuthError && sentToken && !credentialCheck) authEvents.emitAuthFailure(apiError)
     return Promise.reject(apiError)
   },
 )

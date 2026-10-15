@@ -49,6 +49,7 @@ export const authHandlers = [
         email,
         avatarUrl: null,
         ensName: null,
+        nickname: null,
         passwordSalt: salt,
         passwordHash: await hashPassword(salt, parsed.data.password),
         createdAt: new Date().toISOString(),

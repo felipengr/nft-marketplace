@@ -3,6 +3,7 @@ import { EmptyState, ErrorState } from '@/components/feedback/query-states'
 import { NftCard, NftCardSkeleton } from '@/components/nft/nft-card'
 import { Button } from '@/components/ui/button'
 import { CATALOG_SECTION_ID } from '@/features/catalog/catalog-search'
+import { AccountShell } from '@/features/account/account-shell'
 import { useFavorites } from '@/features/favorites/use-favorites'
 
 export const Route = createFileRoute('/_authenticated/favorites')({
@@ -10,15 +11,16 @@ export const Route = createFileRoute('/_authenticated/favorites')({
   component: FavoritesPage,
 })
 
-const GRID_CLASS = 'grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-8'
+const GRID_CLASS = 'grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8'
 
 function FavoritesPage() {
   const { data, error, isPending, isError, isFetching, refetch } = useFavorites()
 
   return (
-    <section aria-labelledby="favorites-title" className="container-page py-8 md:py-12">
-      <h1 id="favorites-title" className="mb-2 text-2xl font-bold">
-        Favoritos
+    <AccountShell>
+    <section aria-labelledby="favorites-title">
+      <h1 id="favorites-title" className="mb-2 text-lg font-bold">
+        Lista de interesse
       </h1>
       <p className="mb-8 text-sm text-subtle" aria-live="polite">
         {data ? `${data.items.length} ${data.items.length === 1 ? 'NFT salvo' : 'NFTs salvos'}` : ' '}
@@ -53,5 +55,6 @@ function FavoritesPage() {
         </ul>
       )}
     </section>
+    </AccountShell>
   )
 }

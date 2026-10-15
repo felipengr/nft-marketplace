@@ -72,9 +72,7 @@ export const PasswordField = forwardRef<HTMLInputElement, Omit<TextFieldProps, '
   const [visible, setVisible] = useState(false)
   return (
     <div className={className}>
-      <label htmlFor={inputId} className={hideLabel ? 'sr-only' : 'mb-1.5 block text-sm font-semibold'}>
-        {label}
-      </label>
+      <FieldLabel htmlFor={inputId} label={label} hidden={hideLabel} requiredMark={false} />
       <div className="relative">
         <input
           ref={ref}
@@ -170,6 +168,38 @@ export const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>
         className={cn(INPUT_CLASS, 'h-36 resize-y py-3')}
         {...props}
       />
+      <FieldError id={errorId} error={error} />
+    </div>
+  )
+})
+
+export const EnsField = forwardRef<HTMLInputElement, Omit<TextFieldProps, 'hideLabel'>>(function EnsField(
+  { label, error, className, inputClassName, id, requiredMark = false, ...props },
+  ref,
+) {
+  const generatedId = useId()
+  const inputId = id ?? generatedId
+  const errorId = `${inputId}-error`
+  const suffixId = `${inputId}-suffix`
+  return (
+    <div className={className}>
+      <FieldLabel htmlFor={inputId} label={label} hidden={false} requiredMark={requiredMark} />
+      <div className="flex gap-2.5">
+        <span id={suffixId} className="flex h-10 shrink-0 items-center rounded-sm border border-secondary px-3 text-sm">
+          .eth
+        </span>
+        <input
+          ref={ref}
+          id={inputId}
+          aria-required={requiredMark || undefined}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={[suffixId, error ? errorId : null].filter(Boolean).join(' ')}
+          autoComplete="off"
+          spellCheck={false}
+          className={cn(INPUT_CLASS, 'min-w-0 flex-1', inputClassName)}
+          {...props}
+        />
+      </div>
       <FieldError id={errorId} error={error} />
     </div>
   )

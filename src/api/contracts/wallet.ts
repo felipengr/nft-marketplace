@@ -53,3 +53,22 @@ export const walletConnectionSchema = z.object({
 })
 
 export type WalletConnection = z.infer<typeof walletConnectionSchema>
+
+export const walletKindSchema = z.enum(['primary', 'secondary'])
+
+export type WalletKind = z.infer<typeof walletKindSchema>
+
+export const upsertWalletInputSchema = z.object({
+  label: z.string().trim().min(2, { error: 'Informe o apelido da carteira.' }).max(24, { error: 'Use no máximo 24 caracteres.' }),
+  network: walletNetworkSchema,
+  address: evmAddressSchema,
+  ensName: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .regex(/^([a-z0-9-]+(\.[a-z0-9-]+)*\.eth)?$/, { error: 'Use um nome ENS terminado em .eth.' })
+    .transform((value) => value || null),
+  provider: walletProviderSchema,
+})
+
+export type UpsertWalletInput = z.input<typeof upsertWalletInputSchema>

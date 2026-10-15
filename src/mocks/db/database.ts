@@ -53,7 +53,7 @@ export type MockDatabase = {
   idempotency: IdempotencyRecord[]
 }
 
-const SCHEMA_VERSION = 4
+const SCHEMA_VERSION = 5
 
 const STORAGE_KEY = 'kurio.mock-db'
 

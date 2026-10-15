@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Heart, LogIn, LogOut, UserRound } from 'lucide-react'
+import { Heart, LogIn, LogOut, MapPin, UserRound } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -57,7 +57,13 @@ export function AccountMenu() {
         <DropdownMenuItem asChild>
           <Link to="/account">
             <UserRound aria-hidden />
-            Minha conta
+            Meu perfil
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/account/wallets">
+            <MapPin aria-hidden />
+            Carteiras
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>

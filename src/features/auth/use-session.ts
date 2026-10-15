@@ -90,7 +90,9 @@ export function useLogout() {
       clearPrivateState(queryClient)
       queryClient.setQueryData(sessionKeys.session, null)
       toast.success('Você saiu da sua conta.')
-      await router.invalidate()
+      const onPrivateRoute = router.state.matches.some((match) => match.routeId.startsWith('/_authenticated'))
+      if (onPrivateRoute) await router.navigate({ to: '/' })
+      else await router.invalidate()
     },
   })
 }
