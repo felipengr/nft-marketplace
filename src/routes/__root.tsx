@@ -48,7 +48,7 @@ function RootLayout() {
         <SiteFooter className={cn(!chrome.footer && 'hidden md:block', !chrome.nav && 'pb-6')} />
         {chrome.nav ? <MobileBottomNav /> : null}
         <RealtimeIndicator />
-        <Toaster position="top-center" />
+        <Toaster position="top-center" mobileOffset={{ top: 72 }} />
       </div>
       </RealtimeProvider>
     </AuthPromptProvider>

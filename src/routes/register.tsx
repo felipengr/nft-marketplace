@@ -23,7 +23,7 @@ function RegisterPage() {
       footer={
         <>
           Já tem uma conta?{' '}
-          <Link to="/login" search={{ redirect: search.redirect }} className="font-semibold text-primary underline-offset-4 hover:underline">
+          <Link to="/login" search={{ redirect: search.redirect }} className="font-semibold text-primary underline underline-offset-4">
             Entre
           </Link>
         </>

@@ -84,12 +84,10 @@ function CouponForm({ appliedCode }: { appliedCode: string | null }) {
 
 function Row({ label, value, hint, emphasis = false }: { label: string; value: string; hint?: string; emphasis?: boolean }) {
   return (
-    <div className={cn(emphasis && 'pt-3')}>
-      <div className="flex items-baseline justify-between gap-3">
-        <dt className={cn('min-w-0', emphasis ? 'font-bold' : 'text-[0.95rem]')}>{label}</dt>
-        <dd className={cn('shrink-0 whitespace-nowrap tabular-nums', emphasis ? 'text-lg font-bold text-primary' : 'text-base')}>{value}</dd>
-      </div>
-      {hint ? <p className="text-right text-xs text-primary">{hint}</p> : null}
+    <div className={cn('flex flex-wrap items-baseline justify-between gap-x-3', emphasis && 'pt-3')}>
+      <dt className={cn('min-w-0', emphasis ? 'font-bold' : 'text-[0.95rem]')}>{label}</dt>
+      <dd className={cn('shrink-0 whitespace-nowrap tabular-nums', emphasis ? 'text-lg font-bold text-primary' : 'text-base')}>{value}</dd>
+      {hint ? <dd className="basis-full text-right text-xs text-primary">{hint}</dd> : null}
     </div>
   )
 }
@@ -127,7 +125,7 @@ export function CartSummary({ cart, quote, quoteError, quoteLoading, quoteRefres
           ))}
         </div>
       ) : (
-        <div aria-live="polite" aria-busy={quoteRefreshing || outdated} className={cn('transition-opacity', (quoteRefreshing || outdated) && 'opacity-60')}>
+        <div aria-live="polite" aria-busy={quoteRefreshing || outdated} className={cn('transition-opacity', (quoteRefreshing || outdated) && 'opacity-80')}>
           <dl className="space-y-2">
             <Row label="Subtotal" value={formatEth(quote.subtotal)} />
             <Row label={quote.discountLabel} value={`(-) ${formatEth(quote.discount)}`} />

@@ -91,7 +91,7 @@ function Totals({ quote, stale }: { quote: Quote | undefined; stale: boolean }) 
     )
   }
   return (
-    <dl className={cn('space-y-2 transition-opacity', stale && 'opacity-60')} aria-live="polite" aria-busy={stale}>
+    <dl className={cn('space-y-2 transition-opacity', stale && 'opacity-80')} aria-live="polite" aria-busy={stale}>
       <div className="flex justify-between gap-3">
         <dt>Subtotal</dt>
         <dd className="text-lg">{formatEth(quote.subtotal)}</dd>
@@ -100,11 +100,11 @@ function Totals({ quote, stale }: { quote: Quote | undefined; stale: boolean }) 
         <dt>{quote.discountLabel}</dt>
         <dd className="whitespace-nowrap">(-) {formatEth(quote.discount)}</dd>
       </div>
-      <div className="flex justify-between gap-3">
+      <div className="flex flex-wrap justify-between gap-x-3">
         <dt>Taxa de rede</dt>
         <dd className="text-lg">{formatEth(quote.networkFee)}</dd>
+        <dd className="basis-full text-center text-xs text-primary">{quote.networkFeeLabel}</dd>
       </div>
-      <p className="text-center text-xs text-primary">{quote.networkFeeLabel}</p>
       <div className="flex justify-between gap-3 border-t border-secondary pt-3">
         <dt className="font-bold">Total</dt>
         <dd className="text-lg font-bold text-primary">{formatEth(quote.total)}</dd>
@@ -278,7 +278,7 @@ function CheckoutContent({ user, cart, quote, quoteStale, wallets }: CheckoutCon
             </ul>
             <p className="text-center text-sm">
               Tem um código promocional?{' '}
-              <Link to="/cart" className="text-primary underline-offset-4 hover:underline">
+              <Link to="/cart" className="text-primary underline underline-offset-4">
                 Aplique aqui
               </Link>
             </p>

@@ -67,8 +67,9 @@ export function MobileNftGallery({ images }: { images: Image[] }) {
   return (
     <div>
       <ul
-        aria-label="Imagens do NFT"
-        className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none]"
+        aria-label="Imagens do NFT (deslize ou use as setas)"
+        tabIndex={0}
+        className="flex snap-x snap-mandatory overflow-x-auto rounded-3xl [scrollbar-width:none]"
         onScroll={(event) => {
           const target = event.currentTarget
           setActive(Math.round(target.scrollLeft / target.clientWidth))

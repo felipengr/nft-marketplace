@@ -11,6 +11,7 @@ export function withNetwork<TInfo extends ResolverInfo>(
 ): (info: TInfo) => Promise<MockResponse> {
   return async (info) => {
     const url = new URL(info.request.url)
+    await mockRuntime.waitIfHeld(url.pathname)
     await delay(mockRuntime.latencyFor(url))
     const failure = mockRuntime.takeFailure(info.request.method, url.pathname)
     if (failure) {

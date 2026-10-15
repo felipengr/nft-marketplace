@@ -24,7 +24,7 @@ function LoginPage() {
       footer={
         <>
           Novo na Kurio?{' '}
-          <Link to="/register" search={{ redirect: search.redirect }} className="font-semibold text-primary underline-offset-4 hover:underline">
+          <Link to="/register" search={{ redirect: search.redirect }} className="font-semibold text-primary underline underline-offset-4">
             Crie uma conta
           </Link>
         </>

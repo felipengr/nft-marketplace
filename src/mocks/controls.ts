@@ -13,6 +13,8 @@ export type MockControls = {
   reset: () => void
   fail: (rule: FailureRule) => void
   clearFailures: () => void
+  hold: (path: string) => void
+  release: () => void
   expireSessions: () => void
   updateNft: (nftId: string, patch: NftPatch) => { price: string; version: number }
   setPrice: (nftId: string, price: string) => { price: string; version: number }
@@ -52,6 +54,8 @@ export const mockControls: MockControls = {
   },
   fail: (rule) => mockRuntime.addFailure(rule),
   clearFailures: () => mockRuntime.clearFailures(),
+  hold: (path) => mockRuntime.hold(path),
+  release: () => mockRuntime.release(),
   expireSessions: expireAllSessions,
   updateNft: (nftId, patch) => summary(updateNft(nftId, patch)),
   setPrice: (nftId, price) => summary(updateNft(nftId, { price })),

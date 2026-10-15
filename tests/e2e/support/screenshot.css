@@ -1,0 +1,9 @@
+.sticky,
+.fixed {
+  position: static !important;
+  transform: none !important;
+}
+
+[data-sonner-toaster] {
+  display: none !important;
+}

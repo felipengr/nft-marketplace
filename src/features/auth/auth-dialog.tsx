@@ -36,9 +36,11 @@ export function AuthPromptProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false)
   const [mode, setMode] = useState<AuthMode>('login')
   const callbackRef = useRef<(() => void) | undefined>(undefined)
+  const returnFocusRef = useRef<HTMLElement | null>(null)
 
   const openDialog = useCallback((nextMode: AuthMode, onAuthenticated?: () => void) => {
     callbackRef.current = onAuthenticated
+    returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
     setMode(nextMode)
     setOpen(true)
   }, [])
@@ -64,6 +66,14 @@ export function AuthPromptProvider({ children }: { children: ReactNode }) {
       >
         <DialogContent
           showCloseButton={false}
+          onCloseAutoFocus={(event) => {
+            const target = returnFocusRef.current
+            returnFocusRef.current = null
+            if (target?.isConnected) {
+              event.preventDefault()
+              target.focus()
+            }
+          }}
           className="max-h-[calc(100dvh-2rem)] gap-0 overflow-y-auto rounded-none border-0 border-b-[6px] border-b-primary bg-surface px-10 pt-10 pb-12 sm:max-w-[31.25rem]"
         >
           <DialogClose

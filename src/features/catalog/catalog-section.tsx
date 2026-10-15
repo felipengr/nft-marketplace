@@ -75,7 +75,7 @@ export function CatalogSection({ search }: { search: CatalogSearch }) {
             </div>
           ) : null}
 
-          <div aria-busy={isFetching} className={cn('transition-opacity', isPlaceholderData && 'opacity-60')}>
+          <div aria-busy={isFetching} className={cn('transition-opacity', isPlaceholderData && 'opacity-80')}>
             {isPending ? (
               <CatalogGridSkeleton />
             ) : isError && !data ? (

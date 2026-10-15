@@ -4,6 +4,7 @@ import { DEFAULT_SCENARIO, SCENARIOS, isScenarioName, type FailureRule, type Sce
 const SCENARIO_KEY = 'kurio.mock-scenario'
 const OVERRIDES_KEY = 'kurio.mock-overrides'
 const CONSUMED_KEY = 'kurio.mock-consumed'
+const HOLDS_KEY = 'kurio.mock-holds'
 const LATENCY_SEED = 1440
 
 type ActiveRule = FailureRule & { remaining: number | null }
@@ -62,6 +63,25 @@ function writeConsumed(flags: string[]): void {
   }
 }
 
+function readHolds(): string[] {
+  try {
+    const raw = window.localStorage.getItem(HOLDS_KEY)
+    return raw ? (JSON.parse(raw) as string[]) : []
+  } catch {
+    return []
+  }
+}
+
+function writeHolds(paths: string[]): void {
+  try {
+    window.localStorage.setItem(HOLDS_KEY, JSON.stringify(paths))
+  } catch {
+    return
+  }
+}
+
+const waiting: Array<() => void> = []
+
 let overrides: ActiveRule[] = []
 
 function buildState(name: ScenarioName): RuntimeState {
@@ -102,12 +122,24 @@ export const mockRuntime = {
     overrides = []
     persist(state, overrides)
     writeConsumed([])
+    writeHolds([])
   },
   consumeOnce(flag: string): boolean {
     const consumed = readConsumed()
     if (consumed.includes(flag)) return false
     writeConsumed([...consumed, flag])
     return true
+  },
+  hold(path: string): void {
+    writeHolds([...readHolds().filter((item) => item !== path), path])
+  },
+  release(): void {
+    writeHolds([])
+    waiting.splice(0).forEach((resolve) => resolve())
+  },
+  async waitIfHeld(pathname: string): Promise<void> {
+    if (!readHolds().some((pattern) => globToRegExp(pattern).test(pathname))) return
+    await new Promise<void>((resolve) => waiting.push(resolve))
   },
   addFailure(rule: FailureRule): void {
     current()

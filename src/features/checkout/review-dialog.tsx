@@ -122,7 +122,7 @@ export function ReviewDialog({ open, onOpenChange, values, cart, quote, quoteSta
           ))}
         </ul>
 
-        <dl className={cn('mt-4 space-y-1.5 text-sm transition-opacity', quoteStale && 'opacity-60')} aria-busy={quoteStale} aria-live="polite">
+        <dl className={cn('mt-4 space-y-1.5 text-sm transition-opacity', quoteStale && 'opacity-80')} aria-busy={quoteStale} aria-live="polite">
           <div className="flex justify-between">
             <dt>Subtotal</dt>
             <dd>{formatEth(quote.subtotal)}</dd>

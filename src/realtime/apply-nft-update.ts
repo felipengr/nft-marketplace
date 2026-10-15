@@ -72,13 +72,22 @@ function cachedVersion(queryClient: QueryClient, nftId: string): { version: numb
   return { version, snapshot }
 }
 
+function isCartKey(key: QueryKey): boolean {
+  return key.at(-1) === 'cart' || (key[0] === 'cart' && key[1] === 'guest' && key.length === 3)
+}
+
 function cartKeysContaining(queryClient: QueryClient, nftId: string): QueryKey[] {
   const keys: QueryKey[] = []
-  const isCartKey = (key: QueryKey) => key.at(-1) === 'cart' || (key[0] === 'cart' && key[1] === 'guest' && key.length === 3)
   for (const [key, data] of queryClient.getQueriesData<Cart>({ predicate: (query) => isCartKey(query.queryKey) })) {
     if (data?.items.some((line) => line.nftId === nftId)) keys.push(key)
   }
   return keys
+}
+
+function refetchInFlight(queryClient: QueryClient, matches: (key: QueryKey) => boolean): void {
+  void queryClient.invalidateQueries({
+    predicate: (query) => query.state.fetchStatus === 'fetching' && matches(query.queryKey),
+  })
 }
 
 export function applyNftUpdate(queryClient: QueryClient, ledger: NftEventLedger, event: NftUpdatedEvent): ApplyResult {
@@ -103,6 +112,7 @@ export function applyNftUpdate(queryClient: QueryClient, ledger: NftEventLedger,
     (data) => (data ? { items: data.items.map((item) => patchSummary(item, event)) } : data),
   )
   void queryClient.invalidateQueries({ queryKey: nftKeys.catalogs(), refetchType: 'none' })
+  refetchInFlight(queryClient, (key) => key[0] === nftKeys.all[0] || isCartKey(key) || key.at(-1) === 'quote' || key.at(-1) === 'favorites')
 
   const carts = cartKeysContaining(queryClient, nftId)
   const limits = new Map(event.data.editions.map((edition) => [edition.id, edition.maxPerOrder]))

@@ -12,6 +12,7 @@ export default defineConfig([
     'src/routeTree.gen.ts',
     'playwright-report',
     'test-results',
+    'lighthouse-reports',
   ]),
   {
     files: ['**/*.{ts,tsx}'],
@@ -23,6 +24,15 @@ export default defineConfig([
     ],
     languageOptions: {
       globals: globals.browser,
+    },
+  },
+  {
+    files: ['tests/**/*.ts', 'playwright.config.ts'],
+    languageOptions: {
+      globals: globals.node,
+    },
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
     },
   },
   {
