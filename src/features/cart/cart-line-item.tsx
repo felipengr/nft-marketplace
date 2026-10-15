@@ -67,7 +67,7 @@ export function CartLineItem({ line, issues, pending, onQuantityChange, onRemove
       </button>
 
       {issues.length ? (
-        <ul className="col-span-full px-3 pb-3 text-xs text-primary md:px-0" role="status">
+        <ul className="col-span-full px-3 pb-3 text-xs text-primary md:px-0">
           {issues.map((issue) => (
             <li key={`${issue.kind}-${issue.lineId}`}>⚠ {issue.message}</li>
           ))}

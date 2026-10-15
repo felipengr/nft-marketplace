@@ -32,3 +32,7 @@ export function removeCoupon() {
 export function mergeGuestCart(guestCartId: string) {
   return request(cartSchema, { method: 'POST', url: '/cart/merge', data: { guestCartId } })
 }
+
+export function acknowledgeCartChanges() {
+  return request(cartSchema, { method: 'POST', url: '/cart/acknowledge' })
+}

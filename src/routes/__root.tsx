@@ -6,6 +6,8 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { Toaster } from '@/components/ui/sonner'
 import { AuthPromptProvider } from '@/features/auth/auth-dialog'
 import { SessionManager } from '@/features/auth/session-manager'
+import { RealtimeIndicator } from '@/realtime/realtime-indicator'
+import { RealtimeProvider } from '@/realtime/realtime-provider'
 import { cn } from '@/lib/utils'
 import type { RouterContext } from '@/router'
 
@@ -29,6 +31,7 @@ function RootLayout() {
 
   return (
     <AuthPromptProvider>
+      <RealtimeProvider>
       <div className="flex min-h-dvh flex-col">
         <HeadContent />
         <SessionManager />
@@ -44,8 +47,10 @@ function RootLayout() {
         </main>
         <SiteFooter className={cn(!chrome.footer && 'hidden md:block', !chrome.nav && 'pb-6')} />
         {chrome.nav ? <MobileBottomNav /> : null}
+        <RealtimeIndicator />
         <Toaster position="top-center" />
       </div>
+      </RealtimeProvider>
     </AuthPromptProvider>
   )
 }

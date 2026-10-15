@@ -216,4 +216,27 @@ export const cartHandlers = [
       )
     }),
   ),
+
+  http.post(
+    '/api/cart/acknowledge',
+    withNetwork(({ request }) => {
+      const owner = resolveOwner(request)
+      if (owner instanceof Response) return owner
+      return HttpResponse.json(
+        db.write((draft) => {
+          const cart = ensureCart(draft, owner)
+          for (const item of cart.items) {
+            const record = findNft(draft, item.nftId)
+            if (!record) continue
+            item.priceSnapshot = record.price
+            const max = lineMaxQuantity(record, item.editionId)
+            if (item.quantity > max) item.quantity = max
+          }
+          cart.items = cart.items.filter((item) => item.quantity > 0)
+          touch(cart)
+          return serializeCart(draft, cart)
+        }),
+      )
+    }),
+  ),
 ]

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatEth } from '@/lib/money'
 import { cn } from '@/lib/utils'
-import { useApplyCoupon, useRemoveCoupon } from './use-cart'
+import { useAcknowledgeCart, useApplyCoupon, useRemoveCoupon } from './use-cart'
 
 function CouponForm({ appliedCode }: { appliedCode: string | null }) {
   const applyMutation = useApplyCoupon()
@@ -106,7 +106,9 @@ type CartSummaryProps = {
 }
 
 export function CartSummary({ cart, quote, quoteError, quoteLoading, quoteRefreshing, onRetryQuote, onCheckout, className }: CartSummaryProps) {
-  const blocking = quote?.issues.some((issue) => issue.kind === 'sold-out' || issue.kind === 'insufficient-stock') ?? false
+  const acknowledge = useAcknowledgeCart()
+  const reviewIssues = quote?.issues.filter((issue) => issue.lineId !== null) ?? []
+  const blocking = reviewIssues.length > 0
   const outdated = Boolean(quote && quote.cartVersion !== cart.version)
 
   return (
@@ -144,6 +146,21 @@ export function CartSummary({ cart, quote, quoteError, quoteLoading, quoteRefres
         </div>
       )}
 
+      {blocking ? (
+        <div role="alert" className="space-y-3 rounded-sm border border-primary bg-primary/10 p-3 text-sm">
+          <p className="font-bold">Seu carrinho mudou desde a última cotação</p>
+          <ul className="space-y-1 text-xs">
+            {reviewIssues.map((issue) => (
+              <li key={`${issue.kind}-${issue.lineId}`}>{issue.message}</li>
+            ))}
+          </ul>
+          <Button size="sm" variant="outline" onClick={() => acknowledge.mutate()} disabled={acknowledge.isPending}>
+            {acknowledge.isPending ? <LoaderCircle className="size-4 animate-spin" aria-hidden /> : null}
+            Aceitar alterações e atualizar
+          </Button>
+        </div>
+      ) : null}
+
       <div className="space-y-3 text-center">
         <Button
           size="lg"
@@ -153,7 +170,6 @@ export function CartSummary({ cart, quote, quoteError, quoteLoading, quoteRefres
         >
           Conectar e finalizar
         </Button>
-        {blocking ? <p className="text-xs text-primary">Ajuste os itens indisponíveis para continuar.</p> : null}
         <Link to="/" className="hidden text-primary underline-offset-4 hover:underline md:inline-block">
           Continuar explorando
         </Link>

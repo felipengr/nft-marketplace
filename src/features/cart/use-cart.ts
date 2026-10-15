@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient, type QueryKey } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { toast } from 'sonner'
-import { addCartItem, applyCoupon, removeCartItem, removeCoupon, updateCartItem } from '@/api/cart'
+import { acknowledgeCartChanges, addCartItem, applyCoupon, removeCartItem, removeCoupon, updateCartItem } from '@/api/cart'
 import { getErrorMessage } from '@/api/api-error'
 import type { AddCartItemInput, Cart } from '@/api/contracts/cart'
 import { useSession } from '@/features/auth/use-session'
@@ -97,6 +97,18 @@ export function useRemoveCoupon() {
     onSuccess: (cart) => {
       applyCart(cart)
       toast.success('Cupom removido.')
+    },
+    onError: (error) => toast.error(getErrorMessage(error)),
+  })
+}
+
+export function useAcknowledgeCart() {
+  const { applyCart } = useCartMutationHelpers()
+  return useMutation({
+    mutationFn: () => acknowledgeCartChanges(),
+    onSuccess: (cart) => {
+      applyCart(cart)
+      toast.success('Carrinho atualizado com os preços e a disponibilidade atuais.')
     },
     onError: (error) => toast.error(getErrorMessage(error)),
   })

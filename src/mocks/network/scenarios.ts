@@ -16,6 +16,7 @@ export type Scenario = {
   failures: FailureRule[]
   sessionTtlMs: number
   emptyCatalog: boolean
+  liveMarket: boolean
 }
 
 const MINUTE = 60 * 1000
@@ -25,6 +26,7 @@ const BASE: Omit<Scenario, 'name' | 'description'> = {
   failures: [],
   sessionTtlMs: 30 * MINUTE,
   emptyCatalog: false,
+  liveMarket: false,
 }
 
 function defineScenario(name: string, description: string, overrides: Partial<Omit<Scenario, 'name' | 'description'>> = {}): Scenario {
@@ -55,6 +57,9 @@ export const SCENARIOS = {
     failures: [{ path: '/api/nfts', method: 'GET', mode: 'timeout', times: 1 }],
   }),
   'empty-catalog': defineScenario('empty-catalog', 'Catálogo sem nenhum NFT.', { emptyCatalog: true }),
+  'live-market': defineScenario('live-market', 'Mercado ao vivo: o preço do Emerald Ape #042 sobe 0.05 ETH a cada 20 segundos via Socket.IO.', {
+    liveMarket: true,
+  }),
   'short-session': defineScenario('short-session', 'Sessões expiram 30 segundos após o login.', {
     sessionTtlMs: 30 * 1000,
   }),
