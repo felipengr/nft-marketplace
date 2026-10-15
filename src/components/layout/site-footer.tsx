@@ -25,7 +25,13 @@ const FEATURES = [
   },
 ]
 
-const PROFILE_LINKS = ['Meu perfil', 'Minha coleção', 'Atividade', 'Estúdio do criador', 'Lista de interesse']
+const PROFILE_LINKS: Array<{ label: string; to?: '/account' | '/favorites' }> = [
+  { label: 'Meu perfil', to: '/account' },
+  { label: 'Minha coleção' },
+  { label: 'Atividade' },
+  { label: 'Estúdio do criador' },
+  { label: 'Lista de interesse', to: '/favorites' },
+]
 
 const HELP_LINKS = ['Central de ajuda', 'Como comprar NFTs', 'Carteira e segurança', 'Política do mercado', 'Denunciar item']
 
@@ -155,9 +161,17 @@ export function SiteFooter({ className }: { className?: string }) {
 
         <div className="grid gap-8 px-6 py-8 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
           <FooterColumn title="Meu perfil">
-            {PROFILE_LINKS.map((label) => (
-              <ComingSoonLink key={label} label={label} />
-            ))}
+            {PROFILE_LINKS.map((link) =>
+              link.to ? (
+                <li key={link.label}>
+                  <Link to={link.to} className={LINK_CLASS}>
+                    {link.label}
+                  </Link>
+                </li>
+              ) : (
+                <ComingSoonLink key={link.label} label={link.label} />
+              ),
+            )}
           </FooterColumn>
           <FooterColumn title="Central de ajuda">
             {HELP_LINKS.map((label) => (

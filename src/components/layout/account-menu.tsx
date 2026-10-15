@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { LogIn, LogOut, UserRound } from 'lucide-react'
+import { Heart, LogIn, LogOut, UserRound } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -58,6 +58,12 @@ export function AccountMenu() {
           <Link to="/account">
             <UserRound aria-hidden />
             Minha conta
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/favorites">
+            <Heart aria-hidden />
+            Lista de interesse
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem onSelect={() => logout.mutate()} disabled={logout.isPending}>
