@@ -35,7 +35,7 @@ function useCarouselPages(trackRef: React.RefObject<HTMLUListElement | null>, it
   return { pages, page, measure, goTo }
 }
 
-export function RelatedNfts({ nftId }: { nftId: string }) {
+export function RelatedNfts({ nftId, title = 'Mais desta coleção' }: { nftId: string; title?: string }) {
   const { data, isPending, isError } = useQuery(relatedNftsQueryOptions(nftId))
   const trackRef = useRef<HTMLUListElement>(null)
   const { pages, page, measure, goTo } = useCarouselPages(trackRef, data?.items.length ?? 0)
@@ -45,7 +45,7 @@ export function RelatedNfts({ nftId }: { nftId: string }) {
   return (
     <section aria-labelledby="related-title" className="container-page pt-16 md:pt-24">
       <h2 id="related-title" className="mb-8 border-b border-secondary pb-2 text-lg font-bold text-primary">
-        Mais desta coleção
+        {title}
       </h2>
       {isPending ? (
         <div className="flex gap-4 overflow-hidden sm:gap-6" aria-hidden>

@@ -7,6 +7,7 @@ import { NftPrice } from '@/components/nft/nft-price'
 import { Button } from '@/components/ui/button'
 import { CATALOG_SECTION_ID } from '@/features/catalog/catalog-search'
 import { formatEth, multiplyEth } from '@/lib/money'
+import { cn } from '@/lib/utils'
 import { EditionPicker } from './edition-picker'
 import { NftDetailTabs, type DetailTab } from './nft-detail-tabs'
 import { MobileNftGallery, NftGallery } from './nft-gallery'
@@ -58,9 +59,10 @@ export function NftDetailView({ nft, editionId, onEditionChange }: NftDetailView
   const [tab, setTab] = useState<DetailTab>('details')
   const tabsRef = useRef<HTMLElement>(null)
   const goBack = useBack()
-  const { toggleFavorite, addToCart, purchase } = useNftActions()
+  const { toggleFavorite, addToCart, purchase, isFavorite, isAdding } = useNftActions()
+  const favorite = isFavorite(nft.id)
   const soldOut = edition.available === 0
-  const intent = { nftId: nft.id, editionId: edition.id, quantity }
+  const intent = { nft, editionId: edition.id, quantity }
   const shareUrl = typeof window === 'undefined' ? '' : `${window.location.origin}/nfts/${nft.id}`
 
   function openReviews() {
@@ -87,11 +89,12 @@ export function NftDetailView({ nft, editionId, onEditionChange }: NftDetailView
             </button>
             <button
               type="button"
-              onClick={() => toggleFavorite(nft.id)}
-              aria-label="Favoritar"
+              onClick={() => toggleFavorite(nft)}
+              aria-label={favorite ? 'Remover dos favoritos' : 'Favoritar'}
+              aria-pressed={favorite}
               className="flex size-10 items-center justify-center rounded-full border border-primary/40 bg-background/70 text-subtle backdrop-blur"
             >
-              <Heart className="size-5" aria-hidden />
+              <Heart className={cn('size-5', favorite && 'fill-primary text-primary')} aria-hidden />
             </button>
           </div>
           <div className="px-4 pt-4">
@@ -154,12 +157,12 @@ export function NftDetailView({ nft, editionId, onEditionChange }: NftDetailView
             <div className="hidden flex-wrap items-center justify-between gap-4 md:flex">
               <QuantityStepper value={quantity} max={maxQuantity} onChange={setQuantity} />
               <div className="flex items-center gap-2">
-                <Button size="lg" className="h-10 w-32.5 font-bold" disabled={soldOut} onClick={() => purchase(intent)}>
+                <Button size="lg" className="h-10 w-32.5 font-bold" disabled={soldOut || isAdding} aria-busy={isAdding} onClick={() => purchase(intent)}>
                   COMPRAR
                 </Button>
-                <Button size="lg" variant="outline" className="h-10 font-normal" onClick={() => toggleFavorite(nft.id)}>
-                  <Heart aria-hidden className="text-primary" />
-                  Favoritar
+                <Button size="lg" variant="outline" className="h-10 font-normal" aria-pressed={favorite} onClick={() => toggleFavorite(nft)}>
+                  <Heart aria-hidden className={cn('text-primary', favorite && 'fill-primary')} />
+                  {favorite ? 'Favoritado' : 'Favoritar'}
                 </Button>
               </div>
             </div>

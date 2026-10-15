@@ -1,5 +1,6 @@
 import type { Edition, NftDetail, NftSummary } from '@/api/contracts/nft'
 import type { User } from '@/api/contracts/session'
+import { defaultEditionId } from './cart/cart-service'
 import { buildArtworkImage } from './fixtures/artworks'
 import { CATEGORY_LABELS, NETWORK_LABELS } from './fixtures/labels'
 import type { NftRecord } from './fixtures/nfts'
@@ -18,11 +19,8 @@ function availableTotal(record: NftRecord): number {
 }
 
 function defaultEdition(record: NftRecord): Edition {
-  const available = record.editions.filter((edition) => edition.available > 0)
-  const limited = available
-    .filter((edition) => edition.supply !== null)
-    .sort((a, b) => (b.supply ?? 0) - (a.supply ?? 0))
-  return limited[0] ?? available[0] ?? record.editions[0]
+  const id = defaultEditionId(record)
+  return record.editions.find((edition) => edition.id === id) ?? record.editions[0]
 }
 
 export function toNftSummary(record: NftRecord): NftSummary {

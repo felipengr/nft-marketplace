@@ -2,6 +2,7 @@ import axios, { type AxiosRequestConfig } from 'axios'
 import type { z } from 'zod'
 import { ApiError, createApiError, toApiError } from './api-error'
 import { authEvents } from './auth-events'
+import { guestCartId } from './cart-identity'
 import { sessionToken } from './session-token'
 
 export const httpClient = axios.create({
@@ -13,6 +14,7 @@ export const httpClient = axios.create({
 httpClient.interceptors.request.use((config) => {
   const token = sessionToken.get()
   if (token) config.headers.set('Authorization', `Bearer ${token}`)
+  config.headers.set('X-Cart-Id', guestCartId.get())
   return config
 })
 

@@ -1,10 +1,11 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { SearchIcon, ShopIcon } from '@/components/icons/brand-icons'
+import { SearchIcon } from '@/components/icons/brand-icons'
 import { Button } from '@/components/ui/button'
 import { CATALOG_SECTION_ID } from '@/features/catalog/catalog-search'
 import { notifyComingSoon } from '@/lib/coming-soon'
 import { cn } from '@/lib/utils'
 import { AccountMenu } from './account-menu'
+import { CartLink } from './cart-link'
 import { SearchDialog } from './search-dialog'
 
 const NAV_ITEM_CLASS =
@@ -73,15 +74,10 @@ export function SiteHeader() {
                 </Button>
               }
             />
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Carrinho"
-              className="text-foreground hover:text-primary"
-              onClick={() => notifyComingSoon('O carrinho')}
-            >
-              <ShopIcon className="size-[1.375rem]" />
-            </Button>
+            <CartLink
+              className="flex size-9 items-center justify-center rounded-sm text-foreground transition-colors hover:text-primary"
+              iconClassName="size-5.5"
+            />
             <AccountMenu />
           </div>
         </div>

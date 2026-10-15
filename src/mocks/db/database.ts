@@ -8,14 +8,33 @@ export type SessionRecord = {
   expiresAt: string
 }
 
+export type CartItemRecord = {
+  lineId: string
+  nftId: string
+  editionId: string
+  quantity: number
+  priceSnapshot: string
+}
+
+export type CartRecord = {
+  id: string
+  ownerId: string | null
+  items: CartItemRecord[]
+  couponCode: string | null
+  version: number
+  updatedAt: string
+}
+
 export type MockDatabase = {
   schemaVersion: number
   nfts: NftRecord[]
   users: UserRecord[]
   sessions: SessionRecord[]
+  carts: CartRecord[]
+  favorites: Record<string, string[]>
 }
 
-const SCHEMA_VERSION = 2
+const SCHEMA_VERSION = 3
 
 const STORAGE_KEY = 'kurio.mock-db'
 
@@ -25,6 +44,8 @@ function createSeed(): MockDatabase {
     nfts: createNftFixtures(),
     users: createUserFixtures(),
     sessions: [],
+    carts: [],
+    favorites: {},
   }
 }
 

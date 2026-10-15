@@ -1,23 +1,14 @@
 import { Link, useRouterState } from '@tanstack/react-router'
 import { ScanLine } from 'lucide-react'
-import type { ReactNode } from 'react'
-import { HeartFilledIcon, HomeFilledIcon, ShopIcon, UserIcon } from '@/components/icons/brand-icons'
-import { notifyComingSoon } from '@/lib/coming-soon'
+import { HeartFilledIcon, HomeFilledIcon, UserIcon } from '@/components/icons/brand-icons'
 import { useSession } from '@/features/auth/use-session'
+import { CartLink } from './cart-link'
 import { SearchDialog } from './search-dialog'
 
 const ITEM_CLASS =
   'flex size-11 items-center justify-center rounded-full text-subtle transition-colors hover:text-primary aria-[current=page]:text-primary'
 
 const NOTCH_MASK = 'radial-gradient(circle 2.6rem at 50% 0, transparent 98%, #000 100%)'
-
-function NavButton({ label, onClick, children }: { label: string; onClick: () => void; children: ReactNode }) {
-  return (
-    <button type="button" aria-label={label} onClick={onClick} className={ITEM_CLASS}>
-      {children}
-    </button>
-  )
-}
 
 export function MobileBottomNav() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
@@ -37,15 +28,19 @@ export function MobileBottomNav() {
             </Link>
           </li>
           <li>
-            <NavButton label="Favoritos" onClick={() => notifyComingSoon('A lista de favoritos')}>
+            <Link
+              to={user ? '/favorites' : '/login'}
+              search={user ? undefined : { redirect: '/favorites' }}
+              aria-label="Favoritos"
+              aria-current={pathname === '/favorites' ? 'page' : undefined}
+              className={ITEM_CLASS}
+            >
               <HeartFilledIcon className="size-6" />
-            </NavButton>
+            </Link>
           </li>
           <li aria-hidden />
           <li>
-            <NavButton label="Carrinho" onClick={() => notifyComingSoon('O carrinho')}>
-              <ShopIcon className="size-5.5" />
-            </NavButton>
+            <CartLink className={ITEM_CLASS} iconClassName="size-5.5" />
           </li>
           <li>
             <Link
