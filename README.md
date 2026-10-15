@@ -2,7 +2,7 @@
 
 Marketplace de NFTs com os fluxos de descoberta, compra e conta do colecionador, em versões desktop e mobile. API, autenticação, carteiras, pagamentos e eventos em tempo real são simulados no navegador com MSW, sem nenhum backend.
 
-- **Demo:** _adicionar a URL pública da Vercel_
+- **Demo:** https://nft-marketplace-ten-dun.vercel.app/
 - **Arquitetura, contratos e decisões:** [ARCHITECTURE.md](ARCHITECTURE.md)
 - **Auditoria Lighthouse:** [lighthouse-reports/SUMMARY.md](lighthouse-reports/SUMMARY.md)
 
