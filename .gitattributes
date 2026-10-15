@@ -1,0 +1,3 @@
+lighthouse-reports/** linguist-generated=true
+src/routeTree.gen.ts linguist-generated=true
+public/mockServiceWorker.js linguist-vendored=true
