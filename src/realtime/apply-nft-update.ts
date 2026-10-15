@@ -9,7 +9,9 @@ import { cartKeys } from '@/queries/cart-queries'
 
 const MAX_SEEN_EVENTS = 500
 
-export type ApplyResult = { status: 'applied'; inCart: boolean; previous: NftSummary | null } | { status: 'duplicate' | 'stale' }
+export type ApplyResult =
+  | { status: 'applied'; inCart: boolean; cartShortage: boolean; previous: NftSummary | null }
+  | { status: 'duplicate' | 'stale' }
 
 export class NftEventLedger {
   private readonly seen = new Set<string>()
@@ -103,9 +105,15 @@ export function applyNftUpdate(queryClient: QueryClient, ledger: NftEventLedger,
   void queryClient.invalidateQueries({ queryKey: nftKeys.catalogs(), refetchType: 'none' })
 
   const carts = cartKeysContaining(queryClient, nftId)
+  const limits = new Map(event.data.editions.map((edition) => [edition.id, edition.maxPerOrder]))
+  const cartShortage = carts.some((key) =>
+    queryClient
+      .getQueryData<Cart>(key)
+      ?.items.some((line) => line.nftId === nftId && line.quantity > (limits.get(line.editionId) ?? line.quantity)),
+  )
   for (const key of carts) {
     void queryClient.invalidateQueries({ queryKey: key, exact: true })
     void queryClient.invalidateQueries({ queryKey: cartKeys.quote(key) })
   }
-  return { status: 'applied', inCart: carts.length > 0, previous: cached.snapshot }
+  return { status: 'applied', inCart: carts.length > 0, cartShortage, previous: cached.snapshot }
 }

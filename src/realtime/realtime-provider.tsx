@@ -24,7 +24,8 @@ function describeChange(event: NftUpdatedEvent, result: Extract<ApplyResult, { s
     return `O preço de ${name} mudou de ${formatEth(previous.price)} para ${formatEth(event.data.price)}.`
   }
   if (event.data.available === 0) return `${name} esgotou.`
-  if (previous && previous.available !== event.data.available) return `A disponibilidade de ${name} mudou.`
+  if (result.cartShortage) return `A disponibilidade de ${name} mudou e não cobre mais a quantidade no seu carrinho.`
+  if (!result.inCart && previous && previous.available !== event.data.available) return `A disponibilidade de ${name} mudou.`
   return null
 }
 
