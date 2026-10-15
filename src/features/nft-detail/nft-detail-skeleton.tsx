@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export function NftDetailSkeleton() {
   return (
-    <div aria-busy="true" aria-label="Carregando NFT">
+    <div aria-busy="true" aria-label="Carregando NFT" className="min-h-dvh">
       <div className="md:hidden">
         <Skeleton className="aspect-square rounded-none" />
         <div className="-mt-8 space-y-4 rounded-t-3xl bg-surface px-4 py-6">

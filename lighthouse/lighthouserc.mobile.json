@@ -1,0 +1,21 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "npx vite preview --port 4174 --strictPort",
+      "startServerReadyPattern": "Local",
+      "url": ["http://localhost:4174/", "http://localhost:4174/nfts/emerald-ape-042"],
+      "numberOfRuns": 3,
+      "settings": {
+        "formFactor": "mobile",
+        "throttlingMethod": "simulate",
+        "onlyCategories": ["performance", "accessibility", "best-practices", "seo"],
+        "chromeFlags": "--headless=new --no-first-run"
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": "lighthouse-reports/mobile",
+      "reportFilenamePattern": "%%PATHNAME%%-%%DATETIME%%.%%EXTENSION%%"
+    }
+  }
+}
