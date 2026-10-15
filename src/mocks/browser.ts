@@ -1,6 +1,7 @@
 import { setupWorker } from 'msw/browser'
 import { applyUrlControls, isPanelEnabled, mockControls } from './controls'
 import { handlers } from './handlers'
+import { resumePendingSettlements } from './orders/order-service'
 import { startLiveMarket } from './realtime/live-market'
 
 export const worker = setupWorker(...handlers)
@@ -16,6 +17,7 @@ export async function startMocks(): Promise<void> {
   })
   window.__kurioMocks = mockControls
   startLiveMarket()
+  resumePendingSettlements()
   if (isPanelEnabled()) {
     const { mountSimulationPanel } = await import('./panel/mount-panel')
     mountSimulationPanel()

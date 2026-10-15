@@ -18,14 +18,14 @@ export function useAuthPrompt() {
   const { openDialog } = context
 
   return useCallback(
-    (mode: AuthMode = 'login', onAuthenticated?: () => void) => {
+    (mode: AuthMode = 'login', onAuthenticated?: () => void, redirectTo?: string) => {
       if (window.matchMedia(DESKTOP_QUERY).matches) {
         openDialog(mode, onAuthenticated)
         return
       }
       void router.navigate({
         to: mode === 'login' ? '/login' : '/register',
-        search: { redirect: router.state.location.href },
+        search: { redirect: redirectTo ?? router.state.location.href },
       })
     },
     [openDialog, router],

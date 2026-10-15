@@ -17,7 +17,7 @@ export function EditionPicker({ editions, selectedId, onSelect }: EditionPickerP
   const selected = editions.find((edition) => edition.id === selectedId)
 
   return (
-    <fieldset>
+    <fieldset className="min-w-0">
       <legend className="mb-2 font-bold">Edição:</legend>
       <div className="flex flex-wrap gap-2">
         {editions.map((edition) => {

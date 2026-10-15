@@ -1,5 +1,7 @@
 import { createNftFixtures, type NftRecord } from '../fixtures/nfts'
 import { createUserFixtures, type UserRecord } from '../fixtures/users'
+import { createWalletFixtures, type WalletRecord } from '../fixtures/wallets'
+import type { Order } from '@/api/contracts/order'
 
 export type SessionRecord = {
   token: string
@@ -25,6 +27,20 @@ export type CartRecord = {
   updatedAt: string
 }
 
+export type OrderRecord = Order & {
+  userId: string
+  cartId: string
+  settleAt: string
+  outcome: 'confirm' | 'reject'
+}
+
+export type IdempotencyRecord = {
+  key: string
+  userId: string
+  requestHash: string
+  orderId: string
+}
+
 export type MockDatabase = {
   schemaVersion: number
   nfts: NftRecord[]
@@ -32,9 +48,12 @@ export type MockDatabase = {
   sessions: SessionRecord[]
   carts: CartRecord[]
   favorites: Record<string, string[]>
+  wallets: WalletRecord[]
+  orders: OrderRecord[]
+  idempotency: IdempotencyRecord[]
 }
 
-const SCHEMA_VERSION = 3
+const SCHEMA_VERSION = 4
 
 const STORAGE_KEY = 'kurio.mock-db'
 
@@ -46,6 +65,9 @@ function createSeed(): MockDatabase {
     sessions: [],
     carts: [],
     favorites: {},
+    wallets: createWalletFixtures(),
+    orders: [],
+    idempotency: [],
   }
 }
 

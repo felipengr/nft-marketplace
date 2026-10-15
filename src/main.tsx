@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 
 async function enableMocks(): Promise<void> {
-  if (import.meta.env.VITE_ENABLE_MOCKS !== 'true') return
+  if (import.meta.env.VITE_ENABLE_MOCKS === 'false') return
   const { startMocks } = await import('./mocks/browser')
   await startMocks()
 }

@@ -1,5 +1,5 @@
 import { Eye, EyeOff } from 'lucide-react'
-import { forwardRef, useId, useState, type InputHTMLAttributes } from 'react'
+import { forwardRef, useId, useState, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
 type TextFieldProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -7,13 +7,35 @@ type TextFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   error?: string
   hideLabel?: boolean
   inputClassName?: string
+  requiredMark?: boolean
 }
 
 const INPUT_CLASS =
   'h-10 w-full rounded-sm border border-secondary bg-surface px-4 text-sm tracking-wide text-foreground placeholder:text-muted-foreground transition-colors focus-visible:border-primary focus-visible:outline-none aria-invalid:border-destructive'
 
+function FieldLabel({ htmlFor, label, hidden, requiredMark }: { htmlFor: string; label: string; hidden: boolean; requiredMark: boolean }) {
+  return (
+    <label htmlFor={htmlFor} className={hidden ? 'sr-only' : 'mb-1.5 block text-[0.95rem] tracking-wide'}>
+      {label}
+      {requiredMark ? (
+        <span aria-hidden className="ml-0.5 text-lg leading-none text-primary">
+          *
+        </span>
+      ) : null}
+    </label>
+  )
+}
+
+function FieldError({ id, error }: { id: string; error?: string }) {
+  return error ? (
+    <p id={id} className="mt-1.5 text-xs text-destructive">
+      {error}
+    </p>
+  ) : null
+}
+
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function TextField(
-  { label, error, hideLabel = true, className, inputClassName, id, ...props },
+  { label, error, hideLabel = true, className, inputClassName, id, requiredMark = false, ...props },
   ref,
 ) {
   const generatedId = useId()
@@ -21,12 +43,11 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   const errorId = `${inputId}-error`
   return (
     <div className={className}>
-      <label htmlFor={inputId} className={hideLabel ? 'sr-only' : 'mb-1.5 block text-sm font-semibold'}>
-        {label}
-      </label>
+      <FieldLabel htmlFor={inputId} label={label} hidden={hideLabel} requiredMark={requiredMark} />
       <input
         ref={ref}
         id={inputId}
+        aria-required={requiredMark || undefined}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}
         className={cn(INPUT_CLASS, inputClassName)}
@@ -95,3 +116,61 @@ export function FormAlert({ message }: { message: string | null }) {
     </div>
   )
 }
+
+type SelectFieldProps = SelectHTMLAttributes<HTMLSelectElement> & {
+  label: string
+  error?: string
+  requiredMark?: boolean
+  children: ReactNode
+}
+
+export const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(function SelectField(
+  { label, error, requiredMark = false, className, id, children, ...props },
+  ref,
+) {
+  const generatedId = useId()
+  const selectId = id ?? generatedId
+  const errorId = `${selectId}-error`
+  return (
+    <div className={className}>
+      <FieldLabel htmlFor={selectId} label={label} hidden={false} requiredMark={requiredMark} />
+      <select
+        ref={ref}
+        id={selectId}
+        aria-required={requiredMark || undefined}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
+        className={cn(INPUT_CLASS, 'appearance-auto bg-background px-3')}
+        {...props}
+      >
+        {children}
+      </select>
+      <FieldError id={errorId} error={error} />
+    </div>
+  )
+})
+
+type TextAreaFieldProps = TextareaHTMLAttributes<HTMLTextAreaElement> & { label: string; error?: string }
+
+export const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>(function TextAreaField(
+  { label, error, className, id, ...props },
+  ref,
+) {
+  const generatedId = useId()
+  const areaId = id ?? generatedId
+  const errorId = `${areaId}-error`
+  return (
+    <div className={className}>
+      <FieldLabel htmlFor={areaId} label={label} hidden={false} requiredMark={false} />
+      <textarea
+        ref={ref}
+        id={areaId}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
+        className={cn(INPUT_CLASS, 'h-36 resize-y py-3')}
+        {...props}
+      />
+      <FieldError id={errorId} error={error} />
+    </div>
+  )
+})

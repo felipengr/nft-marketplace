@@ -8,7 +8,6 @@ import { useAuthPrompt } from '@/features/auth/auth-prompt'
 import { useSession } from '@/features/auth/use-session'
 import { CATALOG_SECTION_ID } from '@/features/catalog/catalog-search'
 import { RelatedNfts } from '@/features/nft-detail/related-nfts'
-import { notifyComingSoon } from '@/lib/coming-soon'
 import { CART_GRID, CartLineItem, CartLineSkeleton } from './cart-line-item'
 import { CartSummary } from './cart-summary'
 import { useCart, useQuote, useRemoveCartItem, useUpdateCartItem } from './use-cart'
@@ -56,14 +55,15 @@ export function CartPage() {
   const pendingUpdates = useIsMutating({ mutationKey: ['cart', 'update-item'] })
   const { isAuthenticated } = useSession()
   const openAuth = useAuthPrompt()
+  const navigate = useNavigate()
 
   const checkout = () => {
     if (!isAuthenticated) {
       toast.info('Entre na sua conta para finalizar a compra. Seus itens continuam no carrinho.', { id: 'checkout-login' })
-      openAuth('login')
+      openAuth('login', () => void navigate({ to: '/checkout' }), '/checkout')
       return
     }
-    notifyComingSoon('O checkout')
+    void navigate({ to: '/checkout' })
   }
 
   const issuesFor = (lineId: string) => quoteQuery.data?.issues.filter((issue) => issue.lineId === lineId) ?? []

@@ -3,6 +3,7 @@ import { DEFAULT_SCENARIO, SCENARIOS, isScenarioName, type FailureRule, type Sce
 
 const SCENARIO_KEY = 'kurio.mock-scenario'
 const OVERRIDES_KEY = 'kurio.mock-overrides'
+const CONSUMED_KEY = 'kurio.mock-consumed'
 const LATENCY_SEED = 1440
 
 type ActiveRule = FailureRule & { remaining: number | null }
@@ -44,6 +45,23 @@ function toActive(rule: FailureRule): ActiveRule {
   return { ...rule, remaining: rule.times ?? null }
 }
 
+function readConsumed(): string[] {
+  try {
+    const raw = window.localStorage.getItem(CONSUMED_KEY)
+    return raw ? (JSON.parse(raw) as string[]) : []
+  } catch {
+    return []
+  }
+}
+
+function writeConsumed(flags: string[]): void {
+  try {
+    window.localStorage.setItem(CONSUMED_KEY, JSON.stringify(flags))
+  } catch {
+    return
+  }
+}
+
 let overrides: ActiveRule[] = []
 
 function buildState(name: ScenarioName): RuntimeState {
@@ -83,6 +101,13 @@ export const mockRuntime = {
     state = buildState(name)
     overrides = []
     persist(state, overrides)
+    writeConsumed([])
+  },
+  consumeOnce(flag: string): boolean {
+    const consumed = readConsumed()
+    if (consumed.includes(flag)) return false
+    writeConsumed([...consumed, flag])
+    return true
   },
   addFailure(rule: FailureRule): void {
     current()

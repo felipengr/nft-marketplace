@@ -32,3 +32,13 @@ export type NftUpdatedEvent = z.infer<typeof nftUpdatedEventSchema>
 export const identifiedPayloadSchema = z.object({
   userId: z.string().nullable(),
 })
+
+export const orderUpdatedEventSchema = eventEnvelope(
+  z.literal('order'),
+  z.object({
+    userId: z.string(),
+    status: z.enum(['pending', 'confirmed', 'rejected']),
+  }),
+)
+
+export type OrderUpdatedEvent = z.infer<typeof orderUpdatedEventSchema>
